@@ -17,6 +17,12 @@ This dataset contains the medical records of 5000 patients who had heart failure
     - smoking: if the patient smokes or not (boolean)
     - time: follow-up period (days)
     - DEATH_EVENT: if the patient died during the follow-up period (boolean: 0 = survived, 1 = died)
+### Correlation 
+![Model Plot](images/Correlation_Heatmap.png)
+
+### Pairplot of heart failure 
+![Model Plot](images/pair_plot_heart_failure_top.png) 
+
 ### EDA Observation
     - Older age -> higher mortality	Aging hearts less resilient
     - Low ejection fraction -> key risk	Direct measure of heart pumping strength
