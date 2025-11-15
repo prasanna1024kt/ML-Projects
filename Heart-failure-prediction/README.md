@@ -17,3 +17,13 @@ This dataset contains the medical records of 5000 patients who had heart failure
     - smoking: if the patient smokes or not (boolean)
     - time: follow-up period (days)
     - DEATH_EVENT: if the patient died during the follow-up period (boolean: 0 = survived, 1 = died)
+### EDA Observation
+    - Older age -> higher mortality	Aging hearts less resilient
+    - Low ejection fraction -> key risk	Direct measure of heart pumping strength
+    - High serum creatinine -> higher mortality	Indicates kidney dysfunction
+    - Low serum sodium -> higher mortality	Sign of heart failure severity
+    - Follow-up time inversely correlated	Death tends to occur earlier for  severe cases
+    - Lifestyle factors (smoking, sex, diabetes)	Weak correlation here
+### Key prediction of death 
+    - Low ejection_fraction, high serum_creatinine, old age, low serum_sodium, and shorter time.
+   
