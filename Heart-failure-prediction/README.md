@@ -32,4 +32,16 @@ This dataset contains the medical records of 5000 patients who had heart failure
     - Lifestyle factors (smoking, sex, diabetes)	Weak correlation here
 ### Key prediction of death 
     - Low ejection_fraction, high serum_creatinine, old age, low serum_sodium, and shorter time.
-   
+
+### Model comparision 
+    | model name | Accuracy | ROC |
+    |----------|----------|----------|
+    |logistic_regression|0.833|0.895|
+    |random_forest|0.982|0.98979|
+    |decision_tree|0.987|0.98503|
+    |xgboost|0.992|0.999425|
+
+### Best Model Selection 
+
+xgboost is the best model with Accuracy 0.992 and roc 0.999425
+
