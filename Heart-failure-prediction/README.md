@@ -136,6 +136,57 @@ The following clinical factors show strong relationships with heart failure outc
 ### Best Model Selection 
 
 xgboost is the best model with Accuracy 0.992 and roc 0.999425
+---
+
+## Instructions to Run the Application
+
+### Prerequisites
+- Python 3.12.3: Ensure Python is installed on your machine.
+- Pipenv: Install Pipenv for dependency management.
+- Docker: To run the application in a containerized environment.
+
+### Local Setup 
+
+#### 1. Clone repo 
+
+```markdown
+git clone https://github.com/prasanna1024kt/ML-Projects.git
+cd ML-Projects/Heart-failure-prediction
+```
+#### 2. Install dependencies
+```markdown
+pip install pipenv
+pipenv install --system --develop
+```
+#### 3. Run the application
+
+``` gunicorn --bind=0.0.0.0:9696 predict:app ```
+
+#### 4. Test locally 
+```
+http://localhost:9696/metrics 
+http://localhost:9696/predicts 
+http://localhost:9696/features 
+```
+
+### Using Docker 
+
+1. Build the Docker container:
+
+``` docker build -t heart-medical-records . ```
+
+2. Run the container:
+
+``` docker run -p 9696:9696 heart-medical-records ```
+
+
+
+
+
+
+
+
+
 
 
 
