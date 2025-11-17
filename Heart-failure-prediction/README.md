@@ -135,7 +135,8 @@ The following clinical factors show strong relationships with heart failure outc
 
 ### Best Model Selection 
 
-xgboost is the best model with Accuracy 0.992 and roc 0.999425
+``` xgboost is the best model with Accuracy 0.992 and roc 0.999425 ```
+
 ---
 
 ## Instructions to Run the Application
@@ -180,6 +181,109 @@ http://localhost:9696/features
 ``` docker run -p 9696:9696 heart-medical-records ```
 
 
+### Test Deployment 
+
+1. Using cURL Send a POST request to test the API:
+
+```  curl -s -X POST http://localhost:9696/predict \
+  -H "Content-Type: application/json" \
+  -d '{"data": 
+  {"age":60,
+  "anaemia":0,
+  "creatinine_phosphokinase":250,
+  "diabetes":0,
+  "ejection_fraction":38,
+  "high_blood_pressure":0,
+  "platelets":260000,
+  "sex":1,
+  "serum_creatinine":1.1,
+  "serum_sodium":137,
+  "smoking":0,
+  "time":45}
+  }' | jq
+```
+OutPut: 
+
+``` 
+{
+  "model_metrics": {
+    "accuracy": 0.992,
+    "roc_auc": 0.9994259853128142,
+    "threshold": 0.5
+  },
+  "results": [
+    {
+      "class_label": 1,
+      "heart_failure": true,
+      "prediction": 0.9144989252090454,
+      "threshold": 0.5
+    }
+  ],
+  "scores": [
+    0.9144989252090454
+  ]
+}
+```
+
+2. Using Python Requests 
+
+```
+import requests, json
+
+BASE = "http://localhost:9696"
+
+# single-record prediction
+sample = {
+  "age":60,
+  "anaemia":0,
+  "creatinine_phosphokinase":250,
+  "diabetes":0,
+  "ejection_fraction":38,
+  "high_blood_pressure":0,
+  "platelets":260000,
+  "sex":1,
+  "serum_creatinine":1.1,
+  "serum_sodium":137,
+  "smoking":0,
+  "time":45
+  }
+response = requests.post(url, json=data)
+print(response.json())
+```
+Expected Response: 
+```
+{
+  "model_metrics": {
+    "accuracy": 0.992,
+    "roc_auc": 0.9994259853128142,
+    "threshold": 0.5
+  },
+  "results": [
+    {
+      "class_label": 1,
+      "heart_failure": true,
+      "prediction": 0.9144989252090454,
+      "threshold": 0.5
+    }
+  ],
+  "scores": [
+    0.9144989252090454
+  ]
+}
+```
+
+### Future Improvements
+
+1. Deploy model in any cloud 
+2. Explore deep learning models for complex feature interactions.
+
+Scalability:
+
+- Deploy on Kubernetes to handle high traffic and ensure availability.
+
+User Interface:
+
+- Add a web-based dashboard.
 
 
 
