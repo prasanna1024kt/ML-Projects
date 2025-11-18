@@ -65,9 +65,6 @@ Located inside the `model/` folder:
 - **Pipfile.lock**  
   Locks exact dependency versions for deterministic and repeatable builds.
 
-- **requirements.txt** *(optional)*  
-  Used mainly for Docker builds if necessary.
-
 - **Dockerfile**  
   Defines steps to containerize the Flask prediction API.
 
@@ -185,7 +182,8 @@ http://localhost:9696/features
 
 1. Using cURL Send a POST request to test the API:
 
-```  curl -s -X POST http://localhost:9696/predict \
+```  
+  curl -s -X POST http://localhost:9696/predict \
   -H "Content-Type: application/json" \
   -d '{"data": 
   {"age":60,
