@@ -6,7 +6,6 @@ The IEEE-CIS (Computational Intelligence Society) Fraud Detection dataset contai
 | Dataset | Rows | Columns | Key Column | Description |
 |---|---:|---:|---|---|
  File Name | Rows | Key Column | Fraud Label | Description |
-|---|---:|---|---|---|
 | **train_transaction.csv** | 590,540 | `TransactionID` | `isFraud`  | Transactional and engineered behavioral features for training |
 | **train_identity.csv** | 144,233 | `TransactionID` | `isFraud`  | Device, browser, network, and digital fingerprint signals for train set |
 | **test_transaction.csv** | 506,691 | `TransactionID` | `isFraud` | Transaction features for model evaluation/prediction |
@@ -128,10 +127,22 @@ df_test_id = pd.ead_parquet("test_identity.parquet", low_memory=False)
 df_test_merge = df_test_trans.merge(df_test_id, on="TransactionID", how="left")
 ```
 
+## Repo layout
+- `Customer_fraud_detection/` — project root
+- `datasets/` — place `train_transaction.parquet`, `train_identity.parquet`, `test_transaction.parquet`, `test_identity.parquet` here
+- `model/` — training & serving code, saved models, predictions
+  - `train.py` — preprocessing, training, evaluation, model export
+  - `predict.py`  — Flask prediction service
+  - `lgb_model.bin` — saved model artifacts
+  - `predictions.csv` — example output
+- `Dockerfile` — container image for the service
+- `requirements.txt` or `Pipfile` — Python dependencies
+- `notebooks/` — EDA analysis , conversion csv to parquet file,python request , 
+
 ## Instructions to Run the Application
 
 ### Prerequisites
-- Python 3.12.3: Ensure Python is installed on your machine.
+- Python 3.13: Ensure Python is installed on your machine.
 - Pipenv: Install Pipenv for dependency management.
 - Docker: To run the application in a containerized environment.
 
@@ -156,7 +167,7 @@ pipenv install --system --develop
 
 #### 4. Test locally 
 ```
-http://localhost:9696/predicts 
+http://localhost:9696/predict
 ```
 
 ### Using Docker 
@@ -247,3 +258,44 @@ Expected Response:
 }
 
 ```
+## API contract
+- POST /predict
+  - JSON body: {"data": [ {feature_dict}, ... ] } or {"data": {feature_dict}}
+  - Response: {"TransactionID": [...], "prediction": [...]} (prediction = probability of fraud)
+- GET /health — indicates whether model is loaded
+
+## predict_test_dataset.py
+
+A small CLI to run the saved model on the test parquet files and write predictions to CSV.
+
+Usage
+```bash
+# from project root
+python model/predict_test_dataset.py \
+  --model model/lgb_model.bin \
+  --datasets ./datasets/test_transaction.parquet \
+  --datasets ./datasets/test_identity.parquet \
+  --out model/predictions.csv
+```
+
+Defaults
+- model: model/lgb_model.bin
+- datasets: datasets/ (expects test_transaction.parquet and test_identity.parquet)
+- out: model/predictions.csv
+
+Behavior
+- Loads test_transaction.parquet and test_identity.parquet, merges on TransactionID.
+- Calls the same preprocess() used during training.
+- Aligns features to the model (fills missing features with -999) before predicting.
+- Writes CSV with columns: TransactionID,isFraud (probability).
+
+## Troubleshooting
+- macOS LightGBM errors: install OpenMP runtime:
+  - brew install libomp
+  - add to shell: export DYLD_LIBRARY_PATH="$(brew --prefix libomp)/lib:$DYLD_LIBRARY_PATH"
+  - reinstall lightgbm in venv if needed.
+- If Docker build fails due to platform-specific wheels (e.g. `contourpy`), build for amd64:
+  - docker buildx build --platform linux/amd64 -t fraud-service:latest --load .
+- If model expects N features but input has fewer, ensure:
+  - You saved the model with feature names (use joblib) OR
+  - You supply all model features (service will fill missing with -999, but order and names must match).
