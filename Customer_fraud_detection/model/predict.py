@@ -8,7 +8,7 @@ import lightgbm as lgb
 import numpy as np
 
 # import preprocess from train.py (train.py must guard execution with __name__ == "__main__")
-from train import preprocess
+from .train import preprocess
 
 app = Flask("Fraud_Detection_Service")
 logging.basicConfig(level=logging.INFO)
