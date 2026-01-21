@@ -127,5 +127,122 @@ df_test_trans = pd.read_parquet("test_transaction.parquet", low_memory=False)
 df_test_id = pd.ead_parquet("test_identity.parquet", low_memory=False)
 df_test_merge = df_test_trans.merge(df_test_id, on="TransactionID", how="left")
 
+## Instructions to Run the Application
 
+### Prerequisites
+- Python 3.12.3: Ensure Python is installed on your machine.
+- Pipenv: Install Pipenv for dependency management.
+- Docker: To run the application in a containerized environment.
 
+### Local Setup 
+
+#### 1. Clone repo 
+
+```markdown
+git clone https://github.com/prasanna1024kt/ML-Projects.git
+cd ML-Projects/Customer_fraud_detection
+```
+#### 2. Install dependencies
+
+```markdown
+pip install pipenv
+pipenv install --system --develop
+```
+
+#### 3. Run the application
+
+``` gunicorn --bind=0.0.0.0:9696 predict:app ```
+
+#### 4. Test locally 
+```
+http://localhost:9696/predicts 
+```
+
+### Using Docker 
+
+1. Build the Docker container:
+
+``` docker build -t fraud-service:latest-pk -f Dockerfile . ```
+
+2. Run the container:
+
+``` docker run -p 9696:9696 fraud-service:latest-pk ```
+
+### Test Deployment 
+
+1. Using cURL Send a POST request to test the API:
+
+```  
+  curl -X POST http://localhost:9696/predict \
+-H "Content-Type: application/json" \
+-d '{
+  "data": [
+    {
+      "TransactionID": 3663552,
+      "TransactionAmt": 284.95,
+      "card1": 10989,
+      "C1": 5,
+      "C2": 2.0,
+      "C13": 7,
+      "V12": 1,
+      "hour": 0,
+      "amt_log": 5.655817,
+      "card_txn_count": 839
+    }
+  ]
+}'
+
+```
+OutPut: 
+
+``` 
+{
+  "TransactionID": [
+    3663552
+  ],
+  "prediction": [
+    0.8807577245894259
+  ]
+}
+```
+
+2. Using Python Requests 
+
+```
+import requests
+
+url = "http://192.168.31.16:9696/predict"
+
+payload = {
+    "data": [
+        {
+            "TransactionID": 3663552,
+            "TransactionAmt": 284.95,
+            "card1": 10989,
+            "C1": 5,
+            "C2": 2.0,
+            "C13": 7,
+            "V12": 1,
+            "hour": 0,
+            "amt_log": 5.655817,
+            "card_txn_count": 839
+        }
+    ]
+}
+
+response = requests.post(url, json=payload)
+print(response.json())
+
+```
+Expected Response: 
+```
+{
+  "TransactionID": [
+    3663552
+  ],
+  "prediction": [
+    0.8807577245894259
+  ]
+}
+
+```
