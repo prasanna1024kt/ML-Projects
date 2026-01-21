@@ -120,6 +120,12 @@ The EDA pipeline analyzes:
 Example (after downloading from Kaggle):
 
 ```python
-df_trans = pd.read_csv("train_transaction.csv", low_memory=False)
-df_id = pd.read_csv("train_identity.csv", low_memory=False)
+df_trans = pd.read_parquet("train_transaction.parquet", low_memory=False)
+df_id = pd.read_parquet("train_identity.parquet", low_memory=False)
 df_merge = df_trans.merge(df_id, on="TransactionID", how="left")
+df_test_trans = pd.read_parquet("test_transaction.parquet", low_memory=False)
+df_test_id = pd.ead_parquet("test_identity.parquet", low_memory=False)
+df_test_merge = df_test_trans.merge(df_test_id, on="TransactionID", how="left")
+
+
+
