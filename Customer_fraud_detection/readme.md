@@ -126,6 +126,7 @@ df_merge = df_trans.merge(df_id, on="TransactionID", how="left")
 df_test_trans = pd.read_parquet("test_transaction.parquet", low_memory=False)
 df_test_id = pd.ead_parquet("test_identity.parquet", low_memory=False)
 df_test_merge = df_test_trans.merge(df_test_id, on="TransactionID", how="left")
+```
 
 ## Instructions to Run the Application
 
@@ -138,7 +139,7 @@ df_test_merge = df_test_trans.merge(df_test_id, on="TransactionID", how="left")
 
 #### 1. Clone repo 
 
-```markdown
+```
 git clone https://github.com/prasanna1024kt/ML-Projects.git
 cd ML-Projects/Customer_fraud_detection
 ```
